@@ -3,7 +3,8 @@ package cmd
 import (
 	"flag"
 	"fmt"
-	"os"
+	"iwsp/base"
+	"iwsp/utils"
 )
 
 var (
@@ -12,27 +13,31 @@ var (
 	webvpn   bool
 	location string
 	time     string
+	debug    bool
 )
 
 func init() {
 	flag.StringVar(&username, "u", "", "用户名")
 	flag.StringVar(&password, "p", "", "密码")
-	flag.BoolVar(&webvpn, "v", false, "是否使用webvpn")
+	flag.BoolVar(&webvpn, "v", false, "使用webvpn")
 	flag.StringVar(&location, "l", "", "预约地点")
 	flag.StringVar(&time, "t", "", "预约时段")
+	flag.BoolVar(&utils.Debug, "d", false, "开启debug模式")
 	flag.Usage = usage
 }
 
-// Run is used to handle args
+// Run 用来承载主程序逻辑
 func Run() {
 	if len(username) == 0 || len(password) == 0 {
-		fatal("必须输入用户名和密码！\n可输入iwsp --help查看帮助信息。")
+		utils.Fatal("必须输入用户名和密码！\n可输入iwsp --help查看帮助信息。")
 	}
-}
-
-func fatal(message string) {
-	_, _ = fmt.Fprintln(os.Stderr, message)
-	os.Exit(1)
+	session := new(base.Session)
+	session.Login(username, password, webvpn)
+	session.InitData(location)
+	// 测试登陆是否成功
+	var content string
+	content, _ = session.Get("http://book.neu.edu.cn/booking/page/rule/13")
+	fmt.Println(content)
 }
 
 func usage() {
@@ -42,5 +47,6 @@ func usage() {
 	-p 一网通密码
 	-v 使用webVPN，默认不使用
 	-l 预约地点，可选值fycc
-	-t 预约时段，可选值...`)
+	-t 预约时段，可选值...
+	-d 启用debug模式`)
 }
