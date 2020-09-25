@@ -7,7 +7,8 @@ func (s *Session) InitData(location string) {
 	utils.Log("您输入的地点", location)
 	switch location {
 	case "fycc":
-		s.data = new(fycc)
+		s.data = &fycc{}
+		s.infoURL = "http://book.neu.edu.cn/booking/page/rule/13"
 	default:
 		utils.Fatal("预约地点输入错误，请检查。")
 	}

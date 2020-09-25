@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"iwsp/base"
 	"iwsp/utils"
+	"time"
 )
 
 var (
@@ -12,7 +13,7 @@ var (
 	password string
 	webvpn   bool
 	location string
-	time     string
+	duration string
 	debug    bool
 )
 
@@ -21,7 +22,7 @@ func init() {
 	flag.StringVar(&password, "p", "", "密码")
 	flag.BoolVar(&webvpn, "v", false, "使用webvpn")
 	flag.StringVar(&location, "l", "", "预约地点")
-	flag.StringVar(&time, "t", "", "预约时段")
+	flag.StringVar(&duration, "t", "", "预约时段")
 	flag.BoolVar(&utils.Debug, "d", false, "开启debug模式")
 	flag.Usage = usage
 }
@@ -34,10 +35,8 @@ func Run() {
 	session := new(base.Session)
 	session.Login(username, password, webvpn)
 	session.InitData(location)
-	// 测试登陆是否成功
-	var content string
-	content, _ = session.Get("http://book.neu.edu.cn/booking/page/rule/13")
-	fmt.Println(content)
+	session.GetData().Set(13, time.Now().Format("2006-01-02"), "16:00-18:00", 1)
+	session.Post()
 }
 
 func usage() {
