@@ -12,6 +12,7 @@ const (
 
 // Login 登陆一网通/webVPN
 func (s *Session) Login(username, password string, webVPN bool) {
+	utils.Log("正在登陆中...")
 	var platform neugo.Platform
 	if webVPN {
 		platform = neugo.WebVPN
@@ -25,4 +26,5 @@ func (s *Session) Login(username, password string, webVPN bool) {
 		utils.Fatal(err)
 	}
 	s.client = client
+	utils.Log("登陆成功")
 }

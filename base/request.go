@@ -50,10 +50,12 @@ func (s *Session) buildMap() {
 		}
 		s.countMap[tmp[1]] = count
 	}
+	utils.Log("时段剩余人数获取成功")
 }
 
 // GetOrderList 得到历史预约列表
 func (s *Session) GetOrderList() {
+	utils.Log("开始请求并解析预约列表")
 	content, err := s.get("http://book.neu.edu.cn/booking/page/orderList")
 	if err != nil {
 		utils.Fatal(err)
@@ -113,9 +115,9 @@ func (s *Session) Post() {
 	// 检测时段输入是否正确，人数是否还有剩余
 	s.data.Check(s.countMap)
 	data, err := json.Marshal(s.data)
-	utils.Log("序列化预约信息：", s.data)
+	utils.Log("序列化预约信息...")
 	if err != nil {
-		utils.Fatal("data序列化失败，请重试")
+		utils.Fatal("预约信息序列化失败")
 	}
 	utils.Log("序列化结果:", string(data))
 	utils.Log("开始进行post请求...")
@@ -123,10 +125,13 @@ func (s *Session) Post() {
 	if err != nil {
 		utils.Fatal("post预约请求失败，请重试")
 	}
-	fmt.Println(resp.Status)
 	result, err := readBody(resp)
-	utils.Log("预约返回结果：\n", result)
-
+	utils.Log("返回结果：", result)
+	reqResult := &returnData{}
+	if err = json.Unmarshal([]byte(result), reqResult); err != nil {
+		utils.Fatal("返回结果异常，预约失败")
+	}
+	fmt.Println(reqResult.Message)
 }
 
 func readBody(resp *http.Response) (string, error) {

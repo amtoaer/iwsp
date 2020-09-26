@@ -4,7 +4,6 @@ import "iwsp/utils"
 
 // InitData 通过预约地点得到用于提交的PostContent
 func (s *Session) InitData(location string) {
-	utils.Log("您输入的地点", location)
 	switch location {
 	case "fycc":
 		s.data = &fycc{}

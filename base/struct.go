@@ -22,6 +22,12 @@ type fycc struct {
 	BookCount  int    `json:"bookCount"`
 }
 
+type returnData struct {
+	Code    int    `json:"code"`
+	Message string `json:"msg"`
+	Data    string `json:"data"`
+}
+
 // PostContent 所有post的结构体需要实现的接口
 type PostContent interface {
 	Set(ruleID int, bookDate, periodName string, bookCount int)
@@ -41,4 +47,5 @@ func (f *fycc) Check(m map[string]int) {
 	if !ok || value == 0 {
 		utils.Fatal("时段不正确或预约人数已满")
 	}
+	utils.Log("通过时段/人数检查")
 }
