@@ -12,7 +12,6 @@ var (
 )
 
 func init() {
-	version = "0.1.0"
 	flag.BoolVar(&v, "version", false, "查看版本")
 }
 
