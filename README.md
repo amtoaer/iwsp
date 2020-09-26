@@ -17,7 +17,11 @@
 
 > 该项目处于早期开发阶段，暂时仅支持风雨操场的预约。
 
-IWSP~~（I wanna do sports!）~~是一款东北大学体育场馆预约工具，使用[neugo](https://github.com/neucn/neugo)进行一网通登录。
+IWSP<del>（I wanna do sports!）</del>是一款东北大学体育场馆预约工具，使用[neugo](https://github.com/neucn/neugo)进行一网通登录。
+
+## 截图
+
+![](img/screenshot.png)
 
 ## 安装
 
