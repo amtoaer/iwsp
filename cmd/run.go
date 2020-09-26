@@ -65,9 +65,8 @@ func Run() {
 	}
 	// 使用InitData函数得到需要post的数据以及获取信息的url
 	session.InitData(location)
-	// 在该处应该通过信息url获取不同时间段的剩余人数（待实现）
 	// 设置需要post的数据（待修改）
-	session.GetData().Set(13, time.Now().Format("2006-01-02"), "16:00-18:00", 1)
+	session.GetData().Set(13, time.Now().Format("2006-01-02"), duration, 1)
 	// 发送预约请求
 	session.Post()
 }
@@ -81,7 +80,14 @@ func usage() {
 	-v 使用webVPN，默认不使用
 	-o 输出历史预约列表
 	-l 预约地点，可选值fycc
-	-t 预约时段，可选值...
+	-t 预约时段，可选值
+		07：00-10：00
+		10：40-12：30
+		12：30-14：00
+		14：00-16：00
+		16：00-18：00
+		18：00-19：30
+		19：30-21：00
 	-d 启用debug模式
 	-h 打印该帮助信息
 	`)

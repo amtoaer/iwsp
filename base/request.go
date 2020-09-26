@@ -8,7 +8,9 @@ import (
 	"iwsp/utils"
 	"net/http"
 	"regexp"
+	"strconv"
 	"strings"
+	"time"
 )
 
 func (s *Session) get(url string) (content string, err error) {
@@ -20,6 +22,34 @@ func (s *Session) get(url string) (content string, err error) {
 		return
 	}
 	return content, err
+}
+
+func (s *Session) buildMap() {
+	s.countMap = make(map[string]int)
+	content, err := s.get(s.infoURL)
+	if err != nil {
+		utils.Fatal(err)
+	}
+	r := regexp.MustCompile("var timeArr = (.+);")
+	m := regexp.MustCompile(`(.+?)\(剩余(.+?)\)`)
+	matchResult := r.FindStringSubmatch(content)
+	if len(matchResult) < 2 {
+		utils.Fatal("正则表达式匹配失败！")
+	}
+	timeArr := strings.ReplaceAll(matchResult[1], "'", "\"")
+	var container map[string]interface{}
+	err = json.Unmarshal([]byte(timeArr), &container)
+	utils.Log("获取时段剩余人数...")
+	for _, value := range container[time.Now().Format("2006-01-02")].([]interface{}) {
+		item := value.(string)
+		utils.Log(item)
+		tmp := m.FindStringSubmatch(item)
+		count, err := strconv.Atoi(tmp[2])
+		if err != nil {
+			utils.Fatal("时段剩余人数获取失败")
+		}
+		s.countMap[tmp[1]] = count
+	}
 }
 
 // GetOrderList 得到历史预约列表
@@ -78,6 +108,10 @@ func (s *Session) GetOrderList() {
 
 // Post post预约信息
 func (s *Session) Post() {
+	// 构建时段->人数的map
+	s.buildMap()
+	// 检测时段输入是否正确，人数是否还有剩余
+	s.data.Check(s.countMap)
 	data, err := json.Marshal(s.data)
 	utils.Log("序列化预约信息：", s.data)
 	if err != nil {
