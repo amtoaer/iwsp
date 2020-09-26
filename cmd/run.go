@@ -9,17 +9,19 @@ import (
 )
 
 var (
-	username string
-	password string
-	webvpn   bool
-	location string
-	duration string
-	debug    bool
+	username  string
+	password  string
+	orderList bool
+	webvpn    bool
+	location  string
+	duration  string
+	debug     bool
 )
 
 func init() {
 	flag.StringVar(&username, "u", "", "用户名")
 	flag.StringVar(&password, "p", "", "密码")
+	flag.BoolVar(&orderList, "o", false, "输出历史预约信息")
 	flag.BoolVar(&webvpn, "v", false, "使用webvpn")
 	flag.StringVar(&location, "l", "", "预约地点")
 	flag.StringVar(&duration, "t", "", "预约时段")
@@ -34,6 +36,10 @@ func Run() {
 	}
 	session := new(base.Session)
 	session.Login(username, password, webvpn)
+	if orderList {
+		session.GetOrderList()
+		return
+	}
 	session.InitData(location)
 	session.GetData().Set(13, time.Now().Format("2006-01-02"), "16:00-18:00", 1)
 	session.Post()
@@ -45,7 +51,10 @@ func usage() {
 	-u 一网通学号
 	-p 一网通密码
 	-v 使用webVPN，默认不使用
+	-o 输出历史预约列表
 	-l 预约地点，可选值fycc
 	-t 预约时段，可选值...
-	-d 启用debug模式`)
+	-d 启用debug模式
+	-h 打印该帮助信息
+	`)
 }
