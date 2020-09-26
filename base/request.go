@@ -41,7 +41,7 @@ func (s *Session) GetOrderList() {
 		utils.Fatal("预约列表解析失败！")
 	}
 	utils.Log("预约列表解析成功！")
-	output := func(m map[string]interface{}) {
+	output := func(container []map[string]interface{}) {
 		getStatus := func(status float64) string {
 			switch status {
 			case 0:
@@ -62,18 +62,18 @@ func (s *Session) GetOrderList() {
 				return "未知状态"
 			}
 		}
-		var (
-			position = m["ruleName"].(string)
-			date     = m["bookPeriodStartTime"].(string)[0:10]
-			duration = m["bookPeriodName"].(string)
-			status   = getStatus(m["status"].(float64))
-		)
-		fmt.Printf("%14s%23s%23s%10s\n", position, date, duration, status)
+		for _, m := range container {
+			var (
+				position = m["ruleName"].(string)
+				date     = m["bookPeriodStartTime"].(string)[0:10]
+				duration = m["bookPeriodName"].(string)
+				status   = getStatus(m["status"].(float64))
+			)
+			fmt.Printf("%14s%23s%23s%10s\n", position, date, duration, status)
+		}
 	}
 	fmt.Printf("%14s%20s%20s%14s\n", "地点", "日期", "时段", "状态")
-	for _, value := range container {
-		output(value)
-	}
+	output(container)
 }
 
 // Post post预约信息
