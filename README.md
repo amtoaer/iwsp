@@ -5,11 +5,13 @@
     <img src="img/logo.png">
 </p>
 <p align="center">
+<img src="https://img.shields.io/aur/version/iwsp-bin?longCache=true&style=for-the-badge&color=%232694ab">
 <img src="https://img.shields.io/github/go-mod/go-version/amtoaer/iwsp?longCache=true&style=for-the-badge">
 <img src="https://goreportcard.com/badge/github.com/amtoaer/iwsp?longCache=true&style=for-the-badge">
 <img src="https://img.shields.io/github/workflow/status/amtoaer/iwsp/Go?longCache=true&style=for-the-badge&color=%23ea7070">
 <img src="https://img.shields.io/github/license/amtoaer/iwsp?longCache=true&style=for-the-badge&color=%23e59572">
 </p>
+
 
 
 
@@ -25,7 +27,13 @@ IWSP<del>（I wanna do sports!）</del>是一款东北大学体育场馆预约�
 
 ## 安装
 
-有两种安装途径：
+Arch Linux可以从AUR安装：
+
+```bash
+yay -S iwsp-bin
+```
+
+其他平台有两种安装途径：
 
 1. 前往[release界面](https://github.com/amtoaer/iwsp/releases)下载对应平台的最新版本。
 
