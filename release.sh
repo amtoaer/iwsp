@@ -32,7 +32,7 @@ md5sums=(
 )
 
 package(){
-        install -D -m 755 $srcdir/iwsp-linux $pkgdir/usr/bin/iwsp
-        install -D -m 644 $srcdir/LICENSE $pkgdir/usr/share/licenses/$pkgname/LICENSE
+        install -D -m 755 \$srcdir/iwsp-linux \$pkgdir/usr/bin/iwsp
+        install -D -m 644 \$srcdir/LICENSE \$pkgdir/usr/share/licenses/\$pkgname/LICENSE
 }
 EOF
