@@ -57,14 +57,19 @@ func Run() {
 	}
 	// 使用neugo进行登陆
 	session := new(base.Session)
+	// 使用InitData函数得到需要post的数据以及获取信息的url
+	session.InitData(location)
+	// 通过用户名密码进行登陆（如果使用webvpn则会使用webvpn规则对url进行加密）
 	session.Login(username, password, webvpn)
 	// 如果指定-o则输出预约历史
 	if orderList {
 		session.GetOrderList()
 		return
 	}
-	// 使用InitData函数得到需要post的数据以及获取信息的url
-	session.InitData(location)
+	// 检查post数据是否为空（即检测地点参数是否成功设置）
+	if session.IsDataEmpty() {
+		utils.Fatal("地点参数设置错误，请检查")
+	}
 	// 设置需要post的数据（待修改）
 	session.GetData().Set(13, time.Now().Format("2006-01-02"), duration, 1)
 	// 发送预约请求

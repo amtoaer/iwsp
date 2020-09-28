@@ -7,14 +7,16 @@ import (
 
 // Session api/client/data的结构体
 type Session struct {
-	createURL string
-	infoURL   string
-	client    *http.Client
-	data      PostContent
+	createURL    string
+	infoURL      string
+	orderListURL string
+	client       *http.Client
+	data         PostContent
 	// 用于标记某个时段的人数
 	countMap map[string]int
 }
 
+// 风雨操场的post数据
 type fycc struct {
 	RuleID     int    `json:"ruleId"`
 	BookDate   string `json:"bookDate"`
@@ -22,6 +24,36 @@ type fycc struct {
 	BookCount  int    `json:"bookCount"`
 }
 
+// 刘长春体育馆的post数据
+type lcc struct {
+	PeriodName string `json:"periodName"`
+	BookCount  int    `json:"bookCount"`
+	BookDate   string `json:"bookDate"`
+	DeviceID   int    `json:"deviceId"`
+	DeviceName string `json:"deviceName"`
+	RuleID     int    `json:"ruleId"`
+	SN         string `json:"sn"`
+}
+
+// 羽乒馆需要的“同行人”结构体
+type user struct {
+	Name string `json:"name"`
+	No   string `json:"no"`
+}
+
+// 羽乒馆的post数据
+type ypg struct {
+	PeroidName string `json:"periodName"`
+	BookCount  int    `json:"bookCount"`
+	BookDate   string `json:"bookDate"`
+	DeviceID   int    `json:"deviceId"`
+	DeviceName string `json:"deviceName"`
+	RuleID     int    `json:"ruleId"`
+	UserList   []user `json:"userList"`
+	SN         string `json:"sn"`
+}
+
+// post的返回结果
 type returnData struct {
 	Code    int    `json:"code"`
 	Message string `json:"msg"`

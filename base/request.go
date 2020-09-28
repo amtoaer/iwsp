@@ -56,7 +56,7 @@ func (s *Session) buildMap() {
 // GetOrderList 得到历史预约列表
 func (s *Session) GetOrderList() {
 	utils.Log("开始请求并解析预约列表")
-	content, err := s.get("http://book.neu.edu.cn/booking/page/orderList")
+	content, err := s.get(s.orderListURL)
 	if err != nil {
 		utils.Fatal(err)
 	}
