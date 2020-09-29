@@ -7,10 +7,13 @@ import (
 	"io/ioutil"
 	"iwsp/utils"
 	"net/http"
+	"os"
 	"regexp"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/jedib0t/go-pretty/table"
 )
 
 func (s *Session) get(url string) (content string, err error) {
@@ -73,7 +76,7 @@ func (s *Session) GetOrderList() {
 		utils.Fatal("预约列表解析失败！")
 	}
 	utils.Log("预约列表解析成功！")
-	output := func(container []map[string]interface{}) {
+	output := func(container []map[string]interface{}, t table.Writer) {
 		getStatus := func(status float64) string {
 			switch status {
 			case 0:
@@ -101,11 +104,14 @@ func (s *Session) GetOrderList() {
 				duration = m["bookPeriodName"].(string)
 				status   = getStatus(m["status"].(float64))
 			)
-			fmt.Printf("%14s%23s%23s%10s\n", position, date, duration, status)
+			t.AppendRow(table.Row{position, date, duration, status})
 		}
+		t.Render()
 	}
-	fmt.Printf("%14s%20s%20s%14s\n", "地点", "日期", "时段", "状态")
-	output(container)
+	t := table.NewWriter()
+	t.SetOutputMirror(os.Stdout)
+	t.AppendHeader(table.Row{"地点", "日期", "时段", "状态"})
+	output(container, t)
 }
 
 // Post post预约信息
