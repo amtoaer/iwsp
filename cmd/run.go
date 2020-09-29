@@ -73,7 +73,7 @@ func Run() {
 	// 设置需要post的数据（待修改）
 	session.GetData().Set(13, time.Now().Format("2006-01-02"), duration, 1)
 	// 发送预约请求
-	session.Post()
+	session.Order()
 }
 
 func usage() {
@@ -93,6 +93,7 @@ func usage() {
 		16：00-18：00
 		18：00-19：30
 		19：30-21：00
+	-u 取消还未开始的预约
 	-d 启用debug模式
 	-h 打印该帮助信息
 	`)

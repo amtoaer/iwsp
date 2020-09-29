@@ -111,11 +111,15 @@ func (s *Session) GetOrderList() {
 	t := table.NewWriter()
 	t.SetOutputMirror(os.Stdout)
 	t.AppendHeader(table.Row{"地点", "日期", "时段", "状态"})
+	t.SortBy([]table.SortBy{
+		{Name: "日期", Mode: table.Dsc},
+		{Name: "时段", Mode: table.Asc},
+	})
 	output(container, t)
 }
 
-// Post post预约信息
-func (s *Session) Post() {
+// Order post预约信息
+func (s *Session) Order() {
 	// 构建时段->人数的map
 	s.buildMap()
 	// 检测时段输入是否正确，人数是否还有剩余
