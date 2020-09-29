@@ -3,6 +3,7 @@ package base
 // InitData 通过预约地点得到用于提交的PostContent
 func (s *Session) InitData(location string) {
 	s.orderListURL = "http://book.neu.edu.cn/booking/page/orderList"
+	s.cancelURL = "http://book.neu.edu.cn/booking/order/cancel"
 	switch location {
 	case "fycc":
 		s.data = &fycc{}

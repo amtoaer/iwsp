@@ -56,8 +56,7 @@ func (s *Session) buildMap() {
 	utils.Log("时段剩余人数获取成功")
 }
 
-// GetOrderList 得到历史预约列表
-func (s *Session) GetOrderList() {
+func (s *Session) getOrderList() []map[string]interface{} {
 	utils.Log("开始请求并解析预约列表")
 	content, err := s.get(s.orderListURL)
 	if err != nil {
@@ -76,6 +75,43 @@ func (s *Session) GetOrderList() {
 		utils.Fatal("预约列表解析失败！")
 	}
 	utils.Log("预约列表解析成功！")
+	return container
+}
+
+// Cancel 取消还未开始的预约
+func (s *Session) Cancel() {
+	container := s.getOrderList()
+	cancelOrder := func(id string, date string, duration string) {
+		utils.Log("准备取消预约...")
+		data, _ := json.Marshal(cancel{
+			OrderID: id,
+		})
+		utils.Log("开始请求...")
+		resp, err := s.client.Post(s.createURL, "application/json;charset=UTF-8", bytes.NewBuffer(data))
+		if err != nil {
+			utils.Fatal("取消预约失败，请重试")
+		}
+		utils.Log("请求成功，状态：", resp.Status)
+		if resp.StatusCode == 0 {
+			fmt.Printf("成功取消%s %s的预约", date, duration)
+		}
+	}
+	for _, m := range container {
+		if m["status"].(float64) == 0 {
+			var (
+				date     = m["bookPeriodStartTime"].(string)[0:10]
+				duration = m["bookPeriodName"].(string)
+				id       = m["id"].(string)
+			)
+			cancelOrder(id, date, duration)
+			return
+		}
+	}
+	utils.Fatal("没有可以取消的预约")
+}
+
+// GetOrderList 得到历史预约列表
+func (s *Session) GetOrderList() {
 	output := func(container []map[string]interface{}, t table.Writer) {
 		getStatus := func(status float64) string {
 			switch status {
@@ -115,7 +151,7 @@ func (s *Session) GetOrderList() {
 		{Name: "日期", Mode: table.Dsc},
 		{Name: "时段", Mode: table.Asc},
 	})
-	output(container, t)
+	output(s.getOrderList(), t)
 }
 
 // Order post预约信息

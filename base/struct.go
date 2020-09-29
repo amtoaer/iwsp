@@ -8,12 +8,18 @@ import (
 // Session api/client/data的结构体
 type Session struct {
 	createURL    string
+	cancelURL    string
 	infoURL      string
 	orderListURL string
 	client       *http.Client
 	data         PostContent
 	// 用于标记某个时段的人数
 	countMap map[string]int
+}
+
+// 取消预约需要的数据
+type cancel struct {
+	OrderID string `json:"orderId"`
 }
 
 // 风雨操场的post数据

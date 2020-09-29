@@ -21,6 +21,7 @@ var (
 	webvpn    bool
 	location  string
 	duration  string
+	cancel    bool
 	debug     bool
 )
 
@@ -32,6 +33,7 @@ func init() {
 	flag.BoolVar(&webvpn, "v", false, "使用webvpn")
 	flag.StringVar(&location, "l", "", "预约地点")
 	flag.StringVar(&duration, "t", "", "预约时段")
+	flag.BoolVar(&cancel, "c", false, "取消未开始的预约")
 	flag.BoolVar(&utils.Debug, "d", false, "开启debug模式")
 	flag.Usage = usage
 }
@@ -66,6 +68,11 @@ func Run() {
 		session.GetOrderList()
 		return
 	}
+	// 如果指定-c则尝试取消预约
+	if cancel {
+		session.Cancel()
+		return
+	}
 	// 检查post数据是否为空（即检测地点参数是否成功设置）
 	if session.IsDataEmpty() {
 		utils.Fatal("地点参数设置错误，请检查")
@@ -93,7 +100,7 @@ func usage() {
 		16：00-18：00
 		18：00-19：30
 		19：30-21：00
-	-u 取消还未开始的预约
+	-c 取消未开始的预约
 	-d 启用debug模式
 	-h 打印该帮助信息
 	`)

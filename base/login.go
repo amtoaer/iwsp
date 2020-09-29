@@ -15,6 +15,7 @@ func (s *Session) Login(username, password string, webVPN bool) {
 		s.createURL = neugo.EncryptWebVPNUrl(s.createURL)
 		s.infoURL = neugo.EncryptWebVPNUrl(s.infoURL)
 		s.orderListURL = neugo.EncryptWebVPNUrl(s.orderListURL)
+		s.cancelURL = neugo.EncryptWebVPNUrl(s.cancelURL)
 	} else {
 		platform = neugo.CAS
 	}
