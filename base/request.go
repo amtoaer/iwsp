@@ -87,14 +87,12 @@ func (s *Session) Cancel() {
 			OrderID: id,
 		})
 		utils.Log("开始请求...")
-		resp, err := s.client.Post(s.createURL, "application/json;charset=UTF-8", bytes.NewBuffer(data))
+		resp, err := s.client.Post(s.cancelURL, "application/json;charset=UTF-8", bytes.NewBuffer(data))
 		if err != nil {
 			utils.Fatal("取消预约失败，请重试")
 		}
 		utils.Log("请求成功，状态：", resp.Status)
-		if resp.StatusCode == 0 {
-			fmt.Printf("成功取消%s %s的预约", date, duration)
-		}
+		fmt.Printf("成功取消%s %s的预约", date, duration)
 	}
 	for _, m := range container {
 		if m["status"].(float64) == 0 {
